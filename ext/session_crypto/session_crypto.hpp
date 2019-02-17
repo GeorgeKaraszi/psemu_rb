@@ -4,9 +4,9 @@
 #include <iostream>
 #include <array>
 #include <vector>
-#include <random>
 
-#include "ruby_from_to.hpp"
+#include "utilities.hpp"
+#include "from_to_ruby.hpp"
 
 #include "rice/String.hpp"
 #include "rice/Array.hpp"
@@ -20,30 +20,68 @@
 
 using namespace Rice;
 using namespace std;
-// Ruby function reference ID's
 
 namespace
 {
     class SessionCrypto {
 
     public:
-        SessionCrypto() {};
+        // Ruby Command: `PSEmu::SessionCrypto.new`
+        SessionCrypto() {
+            storedServerTime = (uint32_t)getTimeSeconds();
+            for(auto& scb : storedServerChallenge) { scb = randomUnsignedChar(); }
+        };
 
-        void generate_dh_key_pairs(vector<uint8_t> rb_challenge,vector<uint8_t> rb_p,vector<uint8_t> rb_g);
-        Rice::Object get_priv_key() { return to_ruby<vector<uint8_t>>(serverPrivKey); }
-        Rice::Object get_pub_key() { return to_ruby<vector<uint8_t>>(serverPubKey); }
-        Rice::Array get_server_challenge() {
-            Array ary;
+        // Generates the initial server's public and private key pairs for the given client.
+        // Ruby command: `#.generate_dh_key_pairs!`
+        void generate_dh_key_pairs(vector<uint8_t> rb_p, vector<uint8_t> rb_g);
 
-            for(auto i = 0; i < storedServerChallenge.size(); i++)
-            {
-                ary.push(to_ruby<uint8_t>(storedClientChallenge[i]));
-            }
-
-            return ary;
+        // Ruby command: `#.server_priv_key`
+        Rice::Object get_priv_key() {
+            return to_ruby<vector<uint8_t>>(serverPrivKey);
         }
+
+        // Ruby command: `#.server_pub_key`
+        Rice::Object get_pub_key()  {
+            return to_ruby<vector<uint8_t>>(serverPubKey);
+        }
+
+        // Ruby command: `#.server_challenge`
+        Rice::Object get_server_challenge() {
+            return to_ruby<std::array<uint8_t, 12>>(storedServerChallenge);
+        }
+
+        // Ruby command: `#.client_challenge`
+        Rice::Object get_client_challenge() {
+            return to_ruby<std::array<uint8_t, 12>>(storedClientChallenge);
+        }
+
+        // Ruby command: `#.server_time`
+        uint32_t get_server_time() {
+            return storedClientTime;
+        }
+
+        // Ruby command: `#.client_challenge = [....]`
+        void set_client_challenge(std::array<uint8_t, 12> rb_challenge) {
+            storedClientChallenge = rb_challenge;
+        }
+
+        // Ruby command: `#.client_time= [...]`
+        void set_client_time(vector<uint8_t> rb_client_time) {
+            for (uint8_t i : rb_client_time) {
+                storedClientTime = (storedClientTime << 8) + i;
+            }
+        }
+
+        // Ruby command: `#.client_time`
+        uint32_t get_client_time() {
+            return storedClientTime;
+        }
+
+
+    protected:
         uint32_t storedClientTime;
-        std::vector<uint8_t> storedClientChallenge;
+        std::array<uint8_t, 12> storedClientChallenge;
 
 
         uint32_t storedServerTime;
