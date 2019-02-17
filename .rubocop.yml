@@ -1,0 +1,97 @@
+AllCops:
+  TargetRubyVersion: 2.5
+  DisplayStyleGuide: true
+  DisplayCopNames: true
+
+#################
+# [i] Overrides #
+#################
+
+Style/CollectionMethods:
+  # Mapping from undesired method to desired_method
+  # e.g. to use `detect` over `find` since find is a reserved AR keyword:
+  #
+  # CollectionMethods:
+  #   PreferredMethods:
+  #     find: detect
+  Enabled: true
+  PreferredMethods:
+    find: detect
+    each_with_index: 'each.with_index'
+
+# Align ends correctly.
+EndAlignment:
+  EnforcedStyleAlignWith: variable
+
+Metrics/LineLength:
+  Max: 120
+  Exclude:
+    - spec/**/*
+
+Layout/AlignHash:
+  EnforcedColonStyle: table
+
+BracesAroundHashParameters:
+  EnforcedStyle: context_dependent
+
+StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/ClassAndModuleChildren:
+  EnforcedStyle: nested
+
+Style/RaiseArgs:
+  EnforcedStyle: compact
+
+Metrics/ModuleLength:
+  Exclude:
+    - spec/**/*
+
+# Spec's, tasks, config's, and the Gemfile cannot by design be reduced.
+# Thus excluding them makes logical sense
+
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*
+    - Gemfile
+    - "*.gemspec"
+
+Metrics/AbcSize:
+  Max: 23
+  Exclude:
+    - spec/**/*
+
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    - spec/**/*
+
+Style/SymbolArray:
+  EnforcedStyle: brackets
+
+Style/WordArray:
+  EnforcedStyle: brackets
+
+#################
+# Disabled cops #
+#################
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Naming/MemoizedInstanceVariableName:
+  Enabled: false
+
+Style/Lambda:
+  Enabled: false
+
+Style/IfUnlessModifier:
+  Enabled: false
+
+Style/GuardClause:
+  Enabled: false

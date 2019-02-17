@@ -1,0 +1,15 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+gem "rice", git: "https://github.com/jasonroelofs/rice.git"
+
+group :development, :test do
+  gem "debase", "~> 0.2", require: false
+  gem "pry"
+  gem "rubocop", "~> 0.52",               require: false
+  gem "rubocop-rspec",                    require: false
+  gem "ruby-debug-ide", "~> 0.7.0.beta7", require: false
+end
+
+gemspec
