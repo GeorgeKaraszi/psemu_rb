@@ -66,9 +66,9 @@ module PSEmu
 
     def process_crypto_packet(session, message)
       case session.crypto_state
-      when :CS_STARTED, :CS_CHALLENGE
+      when :CS_STARTED
         decoded_packet = PSEmu::ClientChallengeXChg.decode(message)
-        session.generate_crypto1!(decoded_packet)
+        session.generate_dh_key_pairs!(decoded_packet)
         encoded_message = PSEmu::ServerChallengeXChg.decode_and_encode(session)
         session.send_msg!(encoded_message)
       when :CS_CHALLENGE

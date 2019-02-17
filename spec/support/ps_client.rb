@@ -7,6 +7,7 @@ class PSClientMessage
   delegate_missing_to :message_io
 
   alias packet message_io
+  alias to_byte_string to_s
 
   def self.hex(message)
     msg = message.dup

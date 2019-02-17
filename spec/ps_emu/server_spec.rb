@@ -59,18 +59,25 @@ module PSEmu
         allow(connection).to receive(:reply).and_return(true)
 
         session = PSEmu.sessions.find_or_create!(connection)
+        server  = PSEmu::Server.new
 
-        response = PSEmu::Server.new.process_non_control_packet(session, client_message.message_io)
+        expect_packet = lambda do |packet|
+          expect(packet[:client_time].bytes).to eq(expected_time.bytes)
+          expect(packet[:p_len].to_hex.to_base16).to eq(0x1000)
+          expect(packet[:p].bytes).to eq(expected_p.bytes)
+          expect(packet[:g_len].to_hex.to_base16).to eq(0x1000)
+          expect(packet[:g].bytes).to eq(expected_g.bytes)
+        end
 
-        expect(response.client_time.bytes).to eq(expected_time.bytes)
-        expect(response.p_len).to eq(0x1000)
-        expect(response.p.bytes).to eq(expected_p.bytes)
-        expect(response.g_len).to eq(0x1000)
-        expect(response.g.bytes).to eq(expected_g.bytes)
+        expect_session = lambda do |my_session|
+          expect(my_session.server_time.to_byte_string.bytes).to eq(expected_time.bytes)
+          expect(my_session.server_pub_key).to be_present
+        end
 
-        pp response.client_time.bytes
-        pp response.p.bytes
-        pp response.g.bytes
+        expect(session).to receive(:generate_dh_key_pairs!).with(expect_packet).and_call_original
+        expect(ServerChallengeXChg).to receive(:decode).with(expect_session).and_call_original
+
+        server.process_non_control_packet(session, client_message.message_io)
       end
     end
   end

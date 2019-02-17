@@ -70,10 +70,12 @@ module HexByte
 
     protected
 
-    def translate_endian(endian)
-      padding_size  = size + (size % 2)
-      is_big_endian = endian == HexByte::BIG_ENDIAN
-      translated    = rjust(padding_size, "0")
+    def translate_endian(_endian)
+      rjust(padding_size, "0")
+
+      # padding_size  = size + (size % 2)
+      # is_big_endian = endian == HexByte::BIG_ENDIAN
+      # translated    = rjust(padding_size, "0")
 
       # if (HexByte.system_big_endian? && !is_big_endian) || (HexByte.system_little_endian? && is_big_endian)
       #   translated.as_hex_array.reverse.join

@@ -15,8 +15,8 @@ class LoginServer
     Socket.udp_server_loop(host, port) do |message, client_endpoint|
       session = PSEmu.sessions.find_or_create!(client_endpoint)
       File.open("record2.txt", "a+") do |file|
-        msg = "[#{message.bytes.join(", ")}]"
-        file.puts "[#{message.bytes.join(", ")}]"
+        msg = "[#{message.bytes.join(', ')}]"
+        file.puts "[#{message.bytes.join(', ')}]"
         file.puts "................."
         puts "Received: #{msg}"
         puts "..............."

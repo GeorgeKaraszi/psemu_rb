@@ -2,14 +2,13 @@
 
 module PSEmu
   class SessionPlayer
-    attr_reader :client_endpoint
-    attr_accessor :client_time, :client_challenge,
-                  :server_privet_key, :server_public_key,
-                  :server_time, :server_challenge,
-                  :dec_mac_key, :enc_mac_key
-
-    delegate :reply, to: :client_endpoint
-    alias send_msg! reply
+    attr_reader :client_endpoint, :session_crypto
+    delegate :server_priv_key,
+             :server_pub_key,
+             :server_challenge,
+             :client_challenge,
+             :server_time,
+             to: :session_crypto
 
     CS_STATES = {
       CS_STARTED:   0,
@@ -20,6 +19,7 @@ module PSEmu
     def initialize(client_endpoint)
       @client_endpoint = client_endpoint
       @cs_state        = CS_STATES[:CS_STARTED]
+      @session_crypto  = SessionCrypto.new
     end
 
     def next_crypto_state!
@@ -30,24 +30,28 @@ module PSEmu
       CS_STATES.key(@cs_state)
     end
 
-    def generate_crypto1!(packet)
-      dh = OpenSSL::PKey::DH.new
-      p  = packet[:p].bytes.inject(0) { |sum, byte| sum * 256 + byte }.to_bn
-      g  = packet[:g].bytes.inject(0) { |sum, byte| sum * 256 + byte }.to_bn
+    def send_msg(message)
+      message = message.to_byte_string unless message.encoding == Encoding::BINARY
+      log_message(message)
+      client_endpoint.reply(message)
+    end
+    alias send_msg! send_msg
 
-      dh.set_pqg(p, nil, g)
-      dh.generate_key!
-
-      # pub = 1F29DCBDADC70A65967766D3A174BFE6
-      # prv = 4B95FFE5CC0DCF6B7143031323066CD1
-
-      @server_privet_key = dh.priv_key
-      @server_public_key = dh.pub_key
-      @client_time       = packet[:client_time]
-      @client_challenge  = packet[:challenge]
-      @server_challenge  = SecureRandom.bytes(12).bytes
-      @server_time       = Time.now.to_i
+    def generate_dh_key_pairs!(packet)
+      session_crypto.client_time      = packet[:client_time].bytes
+      session_crypto.client_challenge = packet[:challenge].bytes
+      session_crypto.generate_dh_key_pairs!(packet[:p].bytes, packet[:g].bytes)
       next_crypto_state!
+    end
+
+    private
+
+    def log_message(message)
+      puts "-------------------------------------------------------"
+      print "Sending Message: "
+      puts "[#{message}]"
+      puts "  ->(HEX):   #{message.to_hex(HexByte::READABLE)}"
+      puts "  ->(BYTES): #{message.bytes}"
     end
   end
 end

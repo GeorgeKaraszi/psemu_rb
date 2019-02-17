@@ -7,18 +7,15 @@ require "ps_emu/version"
 
 require "hex_byte"
 
+require "ps_emu/session/session_crypto" # C Extension
 require "ps_emu/session/session_player"
 require "ps_emu/session/session_manager"
-
-require "ps_emu/crypto"
 
 require "ps_emu/packet/packet"
 require "ps_emu/packet/client_server_start"
 require "ps_emu/packet/client_challenge_xchg"
 require "ps_emu/packet/server_challenge_xchg"
 require "ps_emu/server"
-
-require "session_crypto"
 
 module PSEmu
   class Error < StandardError; end

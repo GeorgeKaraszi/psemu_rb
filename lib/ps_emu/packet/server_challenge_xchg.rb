@@ -15,15 +15,19 @@ module PSEmu
         challenge:         session.server_challenge,
         unk_challenge_end: 0,
         unk_objects:       1,
-        unk2:              [0x03, 0x07, 0x00, 0x00, 0x00, 0x0C, 0x00].to_hex,
+        unk2:              [0x03, 0x07, 0x00, 0x00, 0x00, 0x0C, 0x00],
         pub_key_len:       16,
-        pub_key:           session.server_public_key.to_s,
+        pub_key:           session.server_pub_key,
         unk3:              14
       }
     end
 
     def self.encode(decoded_message)
-      decoded_message.values.to_byte_string
+      if decoded_message.respond_to?(:values)
+        decoded_message.values
+      else
+        decoded_message
+      end.to_byte_string
     end
   end
 end
