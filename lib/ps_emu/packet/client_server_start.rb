@@ -6,16 +6,16 @@ module PSEmu
 
     def self.decode_and_encode(message)
       client_nonce = decode(message).dig(:client_nonce)
-      server_nonce = SecureRandom.bytes(2).to_hex
+      server_nonce = SecureRandom.bytes(4).to_hex
       encode(client_nonce, server_nonce)
     end
 
     def self.decode(message)
-      {
-        unk0:         message.read_bytes(4),
-        client_nonce: message.read_bytes(4),
-        unk1:         message.read_bytes(4)
-      }
+      {}.tap do |hash|
+        hash[:unk0]         = message.read_bytes(4)
+        hash[:client_nonce] = message.read_bytes(4)
+        hash[:unk1]         = message.read_bytes(4)
+      end
     end
 
     def self.encode(client_nonce, server_nonce)

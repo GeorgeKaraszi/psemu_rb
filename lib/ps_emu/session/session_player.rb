@@ -33,7 +33,7 @@ module PSEmu
     def send_msg(message)
       message = message.to_byte_string unless message.encoding == Encoding::BINARY
       log_message(message)
-      client_endpoint.reply(message)
+      client_endpoint.reply(message.b)
     end
     alias send_msg! send_msg
 
@@ -47,11 +47,12 @@ module PSEmu
     private
 
     def log_message(message)
+      puts message.b
       puts "-------------------------------------------------------"
-      print "Sending Message: "
-      puts "[#{message}]"
+      puts "Sending Message: "
       puts "  ->(HEX):   #{message.to_hex(HexByte::READABLE)}"
       puts "  ->(BYTES): #{message.bytes}"
+      puts "  ->(SIZE): #{message.bytesize}"
     end
   end
 end

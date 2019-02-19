@@ -71,9 +71,8 @@ module HexByte
     protected
 
     def translate_endian(_endian)
+      padding_size  = size + (size % 2)
       rjust(padding_size, "0")
-
-      # padding_size  = size + (size % 2)
       # is_big_endian = endian == HexByte::BIG_ENDIAN
       # translated    = rjust(padding_size, "0")
 

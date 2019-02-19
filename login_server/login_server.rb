@@ -18,8 +18,8 @@ class LoginServer
         msg = "[#{message.bytes.join(', ')}]"
         file.puts "[#{message.bytes.join(', ')}]"
         file.puts "................."
-        puts "Received: #{msg}"
         puts "..............."
+        puts "Received: #{msg}"
       end
       server.process_packet!(session, message)
     end

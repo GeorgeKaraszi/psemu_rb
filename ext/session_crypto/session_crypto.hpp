@@ -28,7 +28,7 @@ namespace
     public:
         // Ruby Command: `PSEmu::SessionCrypto.new`
         SessionCrypto() {
-            storedServerTime = (uint32_t)getTimeSeconds();
+            storedServerTime = 0;
             for(auto& scb : storedServerChallenge) { scb = randomUnsignedChar(); }
         };
 
@@ -58,6 +58,9 @@ namespace
 
         // Ruby command: `#.server_time`
         uint32_t get_server_time() {
+            if(storedClientTime == 0) {
+                storedServerTime = (uint32_t)getTimeSeconds();
+            }
             return storedClientTime;
         }
 
