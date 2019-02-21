@@ -7,6 +7,8 @@
 /spec/reports/
 /tmp/
 
+/ext/libraries/
+
 # rspec failure tracking
 .rspec_status
 /cmake-build-debug/

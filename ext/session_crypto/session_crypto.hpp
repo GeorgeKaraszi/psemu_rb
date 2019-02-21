@@ -1,6 +1,13 @@
 #ifndef PS_EMU_CRYPO_SESSION_CRYPTO_HPP
 #define PS_EMU_CRYPO_SESSION_CRYPTO_HPP
 
+#ifdef _WIN32
+// Lets face it.. Ruby sucks on windows.
+// Its just not smart enough to know not to define unix functions over window ones.
+#undef _POSIX_THREAD_SAFE_FUNCTIONS
+#endif
+
+
 #include <iostream>
 #include <array>
 #include <vector>

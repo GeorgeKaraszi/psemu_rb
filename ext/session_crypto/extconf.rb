@@ -5,23 +5,20 @@ require "mkmf-rice"
 # rubocop:disable Style/GlobalVars
 extension_name                   = "session_crypto"
 $CXXFLAGS                       += " -Wall -std=c++14"
+$RICE_USING_MINGW32 = true
 MakeMakefile::CONFIG["optflags"] = ""
-brew_crypto                      = Pathname.new(`brew --prefix cryptopp`.chomp)
-cppflags                         = brew_crypto.join("include", "cryptopp").to_s
-ldflags                          = brew_crypto.join("lib").to_s
 
-found_crypto_library = find_library(
-  "cryptopp",
-  nil,
-  "/usr/local/lib",
-  "/usr/local/lib/cryptopp",
-  "/opt/local/lib",
-  "/opt/local/lib/cryptopp",
-  "/usr/lib",
-  "/usr/lib/cryptopp"
-)
+# ../../../
+cryptopp_path     = Pathname.new(File.expand_path("../../../../ext/libraries/cryptopp"))
+puts ">>>>>>>>>>>>><<<<<<<<<<<<"
+puts cryptopp_path
+puts "------------------------------------------"
+cryptopp_headers  = cryptopp_path.join("include").to_s
+cryptopp_lib      = cryptopp_path.join("lib").to_s
 
-error("Can't find cryptopp library!") unless found_crypto_library
+unless find_library("cryptopp", nil, cryptopp_path.to_s, cryptopp_lib)
+  raise("Can't find cryptopp library! Try running `rake compile_cryptopp` before. Or simply use `rake compile_all`.")
+end
 
 # Shamefully coping over OJ's extconf example.
 
@@ -43,7 +40,7 @@ puts ">>>>> Creating Makefile for #{type} version #{RUBY_VERSION} on #{platform}
   $CPPFLAGS += v.nil? ? " -D#{k}" : " -D#{k}=#{v}"
 end
 
-dir_config(extension_name, [cppflags], [ldflags])
+dir_config(extension_name, [cryptopp_headers], [cryptopp_lib])
 create_makefile(File.join(extension_name, extension_name))
 
 # rubocop:enable Style/GlobalVars

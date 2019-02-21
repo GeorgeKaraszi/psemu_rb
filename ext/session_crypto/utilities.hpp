@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <random>
+#include <chrono>
+#include <climits>
 
 
 // All credit for the contents of this file goes out to the PS Forever team:
