@@ -23,4 +23,6 @@ runner.rb
 ext/session_crypto/CMakeLists.txt
 login_server/*.txt
 *.bundle
+/vendor/
 *.so
+lib/ps_emu/session/session_crypto.so
