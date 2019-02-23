@@ -15,7 +15,6 @@ Gem::Specification.new do |spec|
   spec.homepage      = "http://google.com"
   spec.license       = "MIT"
   spec.extensions    = "ext/extconf.rb"
-  spec.metadata["msys2_mingw_dependencies"] = "cryptopp"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
