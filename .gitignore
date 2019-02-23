@@ -7,10 +7,15 @@
 /spec/reports/
 /tmp/
 
+/ext/libraries/
+
 # rspec failure tracking
 .rspec_status
 /cmake-build-debug/
+/cmake-build-debug-debug-mingw/
 ext/session_crypto/cmake-build-debug/
+ext/session_crypto/cmake-build-debug-mingw/
+ext/session_crypto/cmake-build-release-mingw/
 ext/session_crypto/.idea
 ext/session_crypto/CMakeList.txt
 ext/session_crypto/ruby
@@ -18,3 +23,6 @@ runner.rb
 ext/session_crypto/CMakeLists.txt
 login_server/*.txt
 *.bundle
+/vendor/
+*.so
+lib/ps_emu/session/session_crypto.so

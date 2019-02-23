@@ -1,0 +1,3 @@
+[submodule "ext/externals/cryptopp"]
+	path = ext/externals/cryptopp
+	url = https://github.com/weidai11/cryptopp.git
