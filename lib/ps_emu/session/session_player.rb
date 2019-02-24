@@ -38,7 +38,7 @@ module PSEmu
     alias send_msg! send_msg
 
     def generate_dh_key_pairs!(packet)
-      session_crypto.client_time      = packet[:client_time].bytes
+      session_crypto.client_time      = packet[:client_time]
       session_crypto.client_challenge = packet[:challenge].bytes
       session_crypto.generate_dh_key_pairs!(packet[:p].bytes, packet[:g].bytes)
       next_crypto_state!

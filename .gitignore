@@ -16,6 +16,7 @@
 ext/session_crypto/cmake-build-debug/
 ext/session_crypto/cmake-build-debug-mingw/
 ext/session_crypto/cmake-build-release-mingw/
+ext/session_crypto/cmake-build-debug-wsl/
 ext/session_crypto/.idea
 ext/session_crypto/CMakeList.txt
 ext/session_crypto/ruby

@@ -20,20 +20,6 @@ class PSClientMessage
     @message_io       = PSEmu::Server::ClientMessage.new(message)
     @original_message = original_message || message
   end
-
-  def read_byte(peek = false)
-    read_bytes(1, peek).to_hex_byte
-  end
-
-  def read_hex(bytes = 1, peek = false, array: false)
-    read_bytes(bytes, peek).to_hex(array ? PSEmu::HEX_ARRAY : nil)
-  end
-
-  def read_bytes(bytes, peek = false)
-    packet.read(bytes).tap do
-      packet.pos -= bytes if peek && packet.pos.positive?
-    end
-  end
 end
 
 class PSClient

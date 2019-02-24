@@ -15,8 +15,8 @@ module PSEmu
         read_bytes(1, peek)
       end
 
-      def read_hex(bytes = 1, peek = false, array: false)
-        read_bytes(bytes, peek).to_hex(array ? HexByte::ARRAY : nil)
+      def read_hex(bytes = 1, peek = false, array: false, endian: HexByte::LITTLE_ENDIAN)
+        read_bytes(bytes, peek).to_hex(array ? HexByte::ARRAY : nil, endian: endian)
       end
 
       def read_bytes(bytes, peek = false)

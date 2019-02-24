@@ -6,7 +6,7 @@ module PSEmu
 
     def self.decode_and_encode(message)
       client_nonce = decode(message).dig(:client_nonce)
-      server_nonce = SecureRandom.bytes(2).to_hex
+      server_nonce = SecureRandom.bytes(4).to_hex
       encode(client_nonce, server_nonce)
     end
 

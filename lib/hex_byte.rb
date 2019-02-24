@@ -34,6 +34,17 @@ module HexByte
       to_i(16)
     end
 
+    def to_little_i
+      case bytesize
+      when 1
+        unpack1("C")
+      when 2
+        unpack1("S<*")
+      else
+        unpack1("V*")
+      end
+    end
+
     def to_byte_string(endian: HexByte.endian)
       stripped = gsub(/,*\s*/, "")
 
@@ -71,6 +82,7 @@ module HexByte
     protected
 
     def translate_endian(_endian)
+      padding_size  = size + (size % 2)
       rjust(padding_size, "0")
 
       # padding_size  = size + (size % 2)
@@ -106,12 +118,28 @@ module HexByte
   end
 
   module Integer
+    def to_little_i
+      to_hex(endian: HexByte::LITTLE_ENDIAN).to_i(16)
+    end
+
+    def to_big_i
+      to_hex(endian: HexByte::BIG_ENDIAN).to_i(16)
+    end
+
     def to_byte_string(endian: HexByte.endian)
-      to_hex(HexByte::ARRAY, endian: endian).to_byte_string
+      if self < 0x100             # 8-bit integer
+        [self].pack("c")
+      elsif self < 0x10000        # 16-bit integer
+        endian == HexByte::BIG_ENDIAN ? [self].pack("S>*") : [self].pack("S<*")
+      elsif self < 0x100000000 # 32-bit integer
+        endian == HexByte::BIG_ENDIAN ? [self].pack("L>*") : [self].pack("L<*")
+      else                     # 64-bit integer
+        endian == HexByte::BIG_ENDIAN ? [self].pack("Q>*") : [self].pack("Q<*")
+      end
     end
 
     def to_hex(format = HexByte::DEFAULT, endian: HexByte.endian)
-      hex = to_s(16).to_hex(endian: endian)
+      hex = to_byte_string(endian: endian).to_hex
 
       case format
       when HexByte::READABLE
