@@ -2,8 +2,6 @@
 
 source "https://rubygems.org"
 
-gem "rice", git: "https://github.com/jasonroelofs/rice.git"
-
 group :development, :test do
   gem "debase", "~> 0.2", require: false
   gem "pry"
